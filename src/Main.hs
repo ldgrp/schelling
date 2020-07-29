@@ -3,6 +3,7 @@ module Main where
 import Agent
 import Grid
 import Types
+import Draw
 
 import Data.Maybe (catMaybes)
 
@@ -30,9 +31,11 @@ step u e g = case u of
         [] -> g
     where options a = filter (not . unsatisfied (agentGroup a) (agentThreshold a) . nNeighbours) e
 
+agentX :: Int -> Agent
+agentX i = Agent i 1 0.90
 
-agentX i = Agent i 1 0.33
-agentY i = Agent i 2 0.33
+agentY :: Int -> Agent
+agentY i = Agent i 2 0.10
 
 charToAgent :: Char -> State Int (Maybe Agent)
 charToAgent 'X' = State (\i -> (Just (agentX i), i+1))
@@ -51,6 +54,8 @@ takeWhile1 p = foldr (\x xs -> if p x then x:xs else [x]) []
 
 main :: IO ()
 main = do
-    m <- readFile("data/data3.txt")
-    let grid = setupGrid $ Grid $ evalState (traverse (traverse (charToAgent)) (lines m)) 0
-    print $ fmap score $ takeWhile1 (\x -> score x < 1) (iterate next grid)
+    m <- readFile("data/data.txt")
+    let g = setupGrid $ Grid $ evalState (traverse (traverse (charToAgent)) (lines m)) 0
+        filenames = fmap (\x -> "test" <> show x) [1..]
+        grids = takeWhile1 (\x -> score x < 1) (iterate next g)
+    sequence_ (zipWith save filenames grids)

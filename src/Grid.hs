@@ -2,7 +2,7 @@ module Grid where
 
 import Agent
 
-import Data.List (sort, transpose, groupBy, reverse)
+import Data.List (sort, transpose, groupBy)
 import Data.Tuple (swap)
 import Data.Maybe (catMaybes)
 
@@ -37,12 +37,6 @@ data Cell
     = Empty Int  -- ^ An empty cell with a unique integer
     | Full Agent -- ^ A cell occupied by an agent
     deriving (Eq, Ord)
-
-instance Show Cell where
-    show (Empty i) = take 3 $ show i <> "   "
-    show (Full agent)
-      | agentGroup agent == 1 = take 3 $ "A   "
-      | agentGroup agent == 2 = take 3 $ "B   "
 
 data Neighbourhood a b = Neighbourhood 
    { nRoot :: a             -- ^ root

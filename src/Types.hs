@@ -20,6 +20,5 @@ instance Applicative (State s) where
              in (f' a, s'')
         )
 
+evalState :: State s a -> s -> a
 evalState state s = fst (runState state s)
-
-
